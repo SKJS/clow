@@ -12,7 +12,14 @@ public class OptionValuesInjector {
             CommandLineOption clo = field.getAnnotation(CommandLineOption.class);
             if (clo != null) {
                 Option.Builder builder = Option.builder(clo.name());
-                options.addOption(builder.required(clo.isRequired()).longOpt(clo.longName()).desc(clo.description()).hasArg().build());
+                builder.required(clo.isRequired()).longOpt(clo.longName()).desc(clo.description());
+                if (field.getType() == String[].class) {
+                    builder.hasArgs();
+                }
+                else if (field.getType() == String.class) {
+                    builder.hasArg();
+                }
+                options.addOption(builder.build());
             }
         }
 
@@ -29,7 +36,15 @@ public class OptionValuesInjector {
             CommandLineOption clo = field.getAnnotation(CommandLineOption.class);
             if (clo != null) {
                 try {
-                    field.set(null, commandLine.getOptionValue(clo.name()));
+                    if (field.getType() == String[].class) {
+                        field.set(null, commandLine.getOptionValues(clo.name()));
+                    }
+                    else if (field.getType() == String.class) {
+                        field.set(null, commandLine.getOptionValue(clo.name()));
+                    }
+                    else if (field.getType() == Boolean.class) {
+                        field.set(null, commandLine.hasOption(clo.name()));
+                    }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
