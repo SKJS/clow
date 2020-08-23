@@ -12,4 +12,5 @@ public @interface CommandLineOption {
     String longName();
     String description() default "";
     boolean isRequired();
+    char valueSeparator() default '=';
 }

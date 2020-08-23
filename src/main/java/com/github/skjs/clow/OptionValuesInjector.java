@@ -12,7 +12,7 @@ public class OptionValuesInjector {
             CommandLineOption clo = field.getAnnotation(CommandLineOption.class);
             if (clo != null) {
                 Option.Builder builder = Option.builder(clo.name());
-                builder.required(clo.isRequired()).longOpt(clo.longName()).desc(clo.description());
+                builder.required(clo.isRequired()).longOpt(clo.longName()).desc(clo.description()).valueSeparator(clo.valueSeparator());
                 if (field.getType() == String[].class) {
                     builder.hasArgs();
                 }
